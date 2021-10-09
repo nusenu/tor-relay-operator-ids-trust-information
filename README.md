@@ -152,10 +152,14 @@ https://example.com/.well-known/tor-relay/trust/operator-ids.txt
 
 The URL MUST be HTTPS and use a valid certificate from a generally trusted root CA. 
 Plain HTTP MUST not be used. The URL MUST be accessible by robots (no CAPTCHAs or similar).
+The URL MUST NOT redirect to another host.
 
 The file `operator-ids.txt` contains one operator ID (a domain) per line followed by a ":" and the recursion flag: a value of 0 or 1.
 This recursion flag tells the consumer whether the given operator ID is also trusted to publish (1) `operator-ids.txt` files itself or not (0).
-The recursion flag should only be enabled when the operator is known to publish `operator-ids.txt` and have a DNSSEC-signed domain, to avoid unnecessary attempts.
+The recursion flag should only be enabled when the operator is known to publish `operator-ids.txt` and have a DNSSEC-signed domain, to avoid unnecessary polling.
+
+Publishers MUST only publish operator IDs where they are confident that the operator does NOT operate relays with malicious intent.
+It is generally expected that a publisher "knows" the operators for which it vouches.
 
 Lines starting with "#" are comments and ignored.
 
