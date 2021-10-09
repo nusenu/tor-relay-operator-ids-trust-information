@@ -13,7 +13,8 @@ users of specific domains (that are not necessarily known to defenders) are expl
 Transport level encryption (HTTPS) can defeat many types of attacks by malicious exit relays
 and the global HTTPS availability has significantly increased over the past years but is still not ubiquitous yet,
 especially on the first connection.
-Therefore we propose to publish relay operator trust information to limit the fraction and impact of malicious tor network capacity.
+Therefore we propose to publish relay operator trust information to subsequently limit the fraction
+and impact of malicious tor network capacity by consuming trust information.
 
 Trust in the context of this document is a proxy for a link between community members.
 For example a local hackerspace might trust its community members to run tor relays without malicious intent.
@@ -86,23 +87,16 @@ Trust information consumer want to learn about trusted operator IDs and to detec
 
 ### Trust Anchor (TA)
 
-A trust anchor is the initial starting point which is used to find
-trusted relay operator IDs.
-Consumers of trust information can use one or more trust anchors.
-
-All entities that publish trust information should publish their trust requirements
-under this well-known URL:
-
-https://example.com/.well-known/tor-relay/trust/requirements.txt
-
-This file contains the rules they apply before they add a new entry to the list of trusted operator IDs in english.
+A trust anchor is the initial starting point which is used to find trusted relay operator IDs.
+TAs publish relay operator IDs. By including an operator ID a TA asserts that they trust the operator
+to run tor relays without malicious intent. Trust is binary. There is no notion of "some" trust.
+Consumers of trust information can use one or more trust anchors to find trusted operator IDs.
 
 Trust anchors publish trusted relay operator IDs via a well-known URL for trust information consumers.
 Trust anchors must be able to serve a txt file via HTTPS from the DNSSEC enabled domain that trust information consumers have configured.
-Additionally they publish integrity information in DNSSEC-signed TXT records.
+Additionally TAs publish integrity information in DNSSEC-signed TXT records.
 
 Relays operated by TAs are also considered trusted if their proven operator domain matches the one from the TA.
-
 
 ### Relay Operators
 
@@ -144,7 +138,8 @@ example.com:-
 ```
 
 In addition to max_depth a consumer might also be interested to require multiple independend trust paths to a single operator ID. 
-We leave this to a future iterations of the protocol to keep it simple for now. It will not require any change on how trust information is published, should this be added in the future.
+We leave this to a future iterations of the protocol to keep it simple for now. It will not require any change on how trust information 
+is published, should this be added in the future.
 
 ## Publishing Trusted Operator IDs
 
