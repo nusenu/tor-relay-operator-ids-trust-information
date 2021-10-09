@@ -224,7 +224,9 @@ Re-validation should happen after 4 days and MUST not occur more than once a day
 
 * Domains can expire and be registered by unrelated entities.
 * Domains can be confiscated.
-* Trust anchors can hand out distinct answers to different consumers to attack trust information consumers. A public append only log could ensure that is detectable (similar to certificate transparency).
+* Trust anchors can hand out distinct answers to different consumers to attack consumers. A public append only log could ensure that is detectable (similar to certificate transparency).
+* Trust information and community links can also be exploited for social engeneering and other types of attacks. The design does not require anyone to link themselves to tor relay operators or reveal their identity (pseudonyms can be used).
+* Depending on TA diversity the design might limits the "social diversity" of "trusted" operator IDs to some extend.
 
 
 
