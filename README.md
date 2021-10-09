@@ -136,7 +136,7 @@ Example of a consumer configuration file using 3 distinct TAs:
 global_max_depth:0
 example.com:2
 example.net:1
-example.com:-
+example.org:-
 ```
 
 In addition to max_depth a consumer might also be interested to require multiple independend trust paths to a single operator ID. 
