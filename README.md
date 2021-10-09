@@ -129,12 +129,13 @@ A consumer does not fetch and validate operator IDs where max_depth is already e
 
 **local consumer configuration**
 
-The max_depth value is placed after the the trust anchors domain.
+The max_depth value is placed after the the trust anchors host.
 
-Example local trust anchor configuration file:
+Example of a consumer configuration file using 3 distinct TAs:
 ```
+global_max_depth:0
 example.com:2
-example.net:0
+example.net:1
 example.com:-
 ```
 
