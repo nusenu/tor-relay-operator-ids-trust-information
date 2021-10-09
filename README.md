@@ -88,7 +88,7 @@ Trust information consumer want to learn about trusted operator IDs and to detec
 ### Trust Anchor (TA)
 
 A trust anchor is the initial starting point which is used to find trusted relay operator IDs.
-TAs publish relay operator IDs. By including an operator ID a TA asserts that they trust the operator
+TAs publish relay operator IDs. By publishing a relay operator ID a TA asserts that they trust the operator
 to run tor relays without malicious intent. Trust is binary. There is no notion of "some" trust.
 Consumers of trust information can use one or more trust anchors to find trusted operator IDs.
 
