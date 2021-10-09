@@ -13,8 +13,8 @@ users of specific domains (that are not necessarily known to defenders) are expl
 Transport level encryption (HTTPS) can defeat many types of attacks by malicious exit relays
 and the global HTTPS availability has significantly increased over the past years but is still not ubiquitous yet,
 especially on the first connection.
-Therefore we propose to publish relay operator trust information to subsequently limit the fraction
-and impact of malicious tor network capacity by consuming trust information.
+Therefore we propose to publish relay operator trust information to subsequently have the possibility to limit the fraction
+and impact of unknown tor network capacity by consuming trust information.
 
 Trust in the context of this document is a proxy for a link between community members.
 For example a local hackerspace might trust its community members to run tor relays without malicious intent.
