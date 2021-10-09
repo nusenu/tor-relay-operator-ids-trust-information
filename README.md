@@ -93,8 +93,9 @@ to run tor relays without malicious intent. Trust is binary. There is no notion 
 Consumers of trust information can use one or more trust anchors to find trusted operator IDs.
 
 Trust anchors publish trusted relay operator IDs via a well-known URL for trust information consumers.
-Trust anchors must be able to serve a txt file via HTTPS from the DNSSEC enabled domain that trust information consumers have configured.
-Additionally TAs publish integrity information in DNSSEC-signed TXT records.
+Trust anchors must be able to serve a text file via HTTPS from the DNSSEC-enabled domain that trust information consumers have configured.
+Additionally TAs must publish integrity information (a hash of the text file) in DNSSEC-signed TXT records.
+This allows the TA to publish trust information via semi-trusted systems (i.e. CDNs) without giving them the power to modify trust information.
 
 Relays operated by TAs are also considered trusted if their proven operator domain matches the one from the TA.
 
