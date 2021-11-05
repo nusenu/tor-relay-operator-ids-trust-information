@@ -90,7 +90,10 @@ Trust information consumer want to learn about trusted operator IDs and to detec
 
 A trust anchor is the initial starting point which is used to find trusted relay operator IDs.
 TAs publish relay operator IDs. By publishing a relay operator ID a TA asserts that they trust the operator
-to run tor relays without malicious intent. Trust is binary. There is no notion of "some" trust.
+to run tor relays without malicious intent and that the TA met the operator (organisation/person)
+at least once in a physical setting (not just online).
+TAs publish non-malicious operator IDs only. TAs do not publish any negative or "do not use" operator deny lists.
+Trust is binary. There is no notion of "some" trust.
 Consumers of trust information can use one or more trust anchors to find trusted operator IDs.
 
 Trust anchors publish trusted relay operator IDs via a well-known URL for trust information consumers.
@@ -105,8 +108,13 @@ Relays operated by TAs are also considered trusted if their proven operator doma
 Relay operators are identified by their proven operator domain
 [[4]](https://nusenu.github.io/ContactInfo-Information-Sharing-Specification/#proof)
 [[5]](https://gitlab.torproject.org/tpo/core/torspec/-/blob/main/proposals/326-tor-relay-well-known-uri-rfc8615.md).
-Relay operators can also publish trust information and trust information consumers will use it when
-TAs assign the operator ID the necessary recursion flag.
+
+Optionally relay operators can also publish trust information and trust information consumers will use it when
+TAs assign the operator ID the necessary recursion flag. Trust information published by relay operators has the same
+meaning (asserts that the published operators are running relays without malicious intent) 
+and requirements (HTTPS, hash published via DNSSEC-signed record, met physically at least once).
+
+Relay operators that do not publish trust information do not have a DNSSEC requirement on their domain.
 
 
 ### Trust Information Consumers
