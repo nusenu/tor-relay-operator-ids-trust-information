@@ -145,9 +145,10 @@ is published, should this be added in the future.
 **Negative Trust Configuration**
 
 A consumer can also specify a list of domains that a consumer never wants to trust for anything (no transitive trust and no relay operator trust)
-to ensure that dynamic discovery will never result in any trust in the listed entities.
+to ensure that dynamic discovery will never result in any trust in the listed entities and others that are **only** discoverable via these domains.
+If a certain operator-id is published by a negative trust entry and by a trusted TA, the operator-id is trusted.
 
-negative-trust.conf
+The `negative-trust.conf` configuration contains one entry per line. Lines starting with "#" are comments and ignored during parsing.
 
 ```
 malicious-TA.example.com
