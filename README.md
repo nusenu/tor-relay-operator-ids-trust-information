@@ -142,7 +142,7 @@ In addition to max_depth a consumer might also be interested to require multiple
 We leave this to a future iterations of the protocol to keep it simple for now. It will not require any change on how trust information 
 is published, should this be added in the future.
 
-**Negative Trust Configuration**
+#### Negative Trust Configuration
 
 A consumer can also specify a list of domains that a consumer never wants to trust for anything (no transitive trust and no relay operator trust)
 to ensure that dynamic discovery will never result in any trust in the listed entities and others that are **only** discoverable via these domains.
