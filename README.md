@@ -126,11 +126,11 @@ A consumer does not fetch and validate operator IDs where max_depth is already e
 | 2 | Discover and accept trust information with a max edge count of up to 2. This is the recommended default value. In the following trust path: A(TA) -> B -> C -> D the last accepted ID would be "C". "D" is ignored.  | 
 | N | Trust up to N edges in the trust path. Ignore operator IDs where the edge count exceeds this value. |
 
-**local consumer configuration**
+#### Local Trust Consumer Configuration
 
 The max_depth value is placed after the the trust anchors host.
 
-Example of a consumer configuration file using 3 distinct TAs:
+Example of a consumer configuration file (ta.conf) using 3 distinct TAs:
 ```
 global_max_depth:0
 example.com:2
@@ -141,6 +141,20 @@ example.org:-
 In addition to max_depth a consumer might also be interested to require multiple independend trust paths to a single operator ID. 
 We leave this to a future iterations of the protocol to keep it simple for now. It will not require any change on how trust information 
 is published, should this be added in the future.
+
+**Negative Trust Configuration**
+
+A consumer can also specify a list of domains that a consumer never wants to trust for anything (no transitive trust and no relay operator trust)
+to ensure that dynamic discovery will never result in any trust in the listed entities.
+
+negative-trust.conf
+
+```
+malicious-TA.example.com
+malicious-operator.example.com
+```
+
+
 
 ## Publishing Trusted Operator IDs
 
