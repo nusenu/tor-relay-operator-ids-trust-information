@@ -82,7 +82,8 @@ by other operators.
 
 ### Trust Information Consumer Goals
 
-Trust information consumer want to learn about trusted operator IDs and to detect manipulated trust information (content of `trusted-aroi.txt` files).
+Trust information consumer - tor directory authorities could be an example consumer - want to learn about trusted AROIs, discover trust paths between AROIs 
+and detect manipulated trust information (`trusted-aroi.txt` content).
 
 ## Roles
 
@@ -110,9 +111,9 @@ Relay operators are identified by their AROI
 
 Relay operators can also publish trust information and trust information consumers can make use of it to find relationships between relay operators. 
 Trust information published by relay operators has the same meaning (asserts that the published operators are running relays without malicious intent) 
-and requirements (HTTPS, hash published via DNSSEC-signed record).
+and requirements (HTTPS, hash published via DNSSEC-signed TXT record).
 
-Relay operators that do not publish trust information do not have a DNSSEC requirement on their domain.
+Relay operators that do not publish trust information do not have a DNSSEC requirement on their AROI domain.
 
 Relay operators may also publish a reverse trust reference in a `trusted-by.txt` file to allow interested
 parties to discover trusting entities. For details see the section "Publishing Trusting Parties".
@@ -236,14 +237,15 @@ Example walkthrough:
 
 For this example walkthrough, the local configuration on the trust information consumer contains a single trust anchor:
 ```
-example.com
+example.com:
 ```
 
 A trust information consumer performs these steps:
 
-1. fetch https://example.com/.well-known/tor-relay/trust/trusted-aroi.txt and ensure that the certificate is valid.
 1. query the DNS TXT record `trusted-aroi-hash._tor.example.com` and ensure it is DNSSEC-signed.
-1. ensure the SHA512 hash of the `trusted-aroi.txt` file matches the one provided in the DNS TXT record (from step 2)
+2. abort if the TXT record is not signed, does not exist or is not formated as expected.
+3. fetch https://example.com/.well-known/tor-relay/trust/trusted-aroi.txt and ensure that the TLS certificate is valid.
+4. ensure the SHA512 hash of the `trusted-aroi.txt` file matches the one provided in the DNS TXT record (from step 1)
 the `trusted-aroi.txt` file contains:
 ```
 example.org:1
@@ -251,8 +253,11 @@ example.net:0
 ```
 1. check whether these IDs are already in the local cache of trusted operators
 1. ensure example.org and example.net exist
-1. add them to the list of trusted operator IDs
+1. add them to the list of trusted AROIs
 1. repeat the first 3 steps for example.org (but not for example.net because it has the recursion flag set to 0)
+
+When there are multiple pointers (`trusted-aroi.txt` entries) from distinct origins to a given AROI, as soon 
+as at least one has the recursion flag set, recursive discovery is performed.
 
 ### Caching and Re-validation
 
