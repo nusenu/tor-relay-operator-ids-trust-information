@@ -112,13 +112,8 @@ and requirements (HTTPS, hash published via DNSSEC-signed record).
 
 Relay operators that do not publish trust information do not have a DNSSEC requirement on their domain.
 
-Relay operators may also publish a reverse trust reference in a `trusted-by.txt` file under the follwoing well-known URI
-
-https://example.com/.well-known/tor-relay/trust/trusted-by.txt
-
-to allow interested parties to discover and enumerate trusting parties in a reverse manner.
-
-`trusted-by.txt` contains one DNS domain by line and should not contain more than 50 lines. `trusted-by.txt` entries can be verified by fetching the `trusted-aroi.txt` file from the well-known URI and the domains given in the `trusted-by.txt` file.
+Relay operators may also publish a reverse trust reference in a `trusted-by.txt` file to allow interested
+parties to discover trusting entities. For details see the section "Publishing Trusting Parties".
 
 ### Trust Information Consumers
 
@@ -167,7 +162,6 @@ malicious-operator.example.com
 ```
 
 
-
 ## Publishing Trusted AROIs
 
 Trust anchors and optionally also relay operators publish 
@@ -209,6 +203,20 @@ The DNS TTL value for the TXT record should not exceed 60 seconds to be able to 
 file withouth running out of sync for an extended amount of time due to DNS caching.
 
 The only supported hash algorithm is SHA512.
+
+
+## Publishing Trusting Parties
+
+To allow interested parties to discover and enumerate trusting parties of a given AROI,
+relay operators can optionally publish trusting entities under the follwoing well-known URI:
+
+https://example.com/.well-known/tor-relay/trust/trusted-by.txt
+
+`trusted-by.txt` contains one DNS domain by line and should not contain more than 100 entries.
+`trusted-by.txt` entries can be verified by fetching the `trusted-aroi.txt` file from the well-known URI and the domains given in the `trusted-by.txt` file.
+Before attempting to fetch `trusted-aroi.txt` from these domains via HTTPS validating parties should check the DNSSEC status of the domain and the presence of the `trusted-aroi-hash._tor.example.com.` DNS TXT record limit unnecessary HTTPS requests.
+
+The `trusted-by.txt` file is not protected using a hash found in a DNSSEC signed TXT record, like `trusted-aroi.txt`.
 
 ## Validating Trust Information
 
