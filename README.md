@@ -34,7 +34,8 @@ The high level goal is to limit the impact of malicious tor relays on users
 and to increase the trustworthiness of the tor network for tor users while also increasing the cost for malicious actors. To achieve that goal we need
 information about whether a operator is known/trusted or completely unknown (no links to known entities).
 
-On a more technical level the goal is to establish a simple protocol to publish and consume trust information about authenticated relay operator IDs (AROI).
+On a more technical level the goal is to establish a simple protocol to publish and consume trust information about authenticated relay operator IDs (AROI)
+and to make discovery and enumeration of trust relationships possible.
 The authenticated relay operator ID (AROI) is the proven operator domain [[4]](https://nusenu.github.io/ContactInfo-Information-Sharing-Specification/#proof)
 [[5]](https://gitlab.torproject.org/tpo/core/torspec/-/blob/main/proposals/326-tor-relay-well-known-uri-rfc8615.md). 
 As of April 2023 over 65% [[6]](https://nusenu.github.io/OrNetStats/#top-10-exit-operators-with-a-proven-domain) 
