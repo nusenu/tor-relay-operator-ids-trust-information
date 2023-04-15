@@ -35,7 +35,7 @@ and to increase the trustworthiness of the tor network for tor users while also 
 information about whether a operator is known/trusted or completely unknown (no links to known entities).
 
 On a more technical level the goal is to establish a simple protocol to publish and consume trust information about authenticated relay operator IDs (AROI).
-Relay operator IDs are the proven operator domain [[4]](https://nusenu.github.io/ContactInfo-Information-Sharing-Specification/#proof)
+The authenticated relay operator ID (AROI) is the proven operator domain [[4]](https://nusenu.github.io/ContactInfo-Information-Sharing-Specification/#proof)
 [[5]](https://gitlab.torproject.org/tpo/core/torspec/-/blob/main/proposals/326-tor-relay-well-known-uri-rfc8615.md). 
 As of April 2023 over 65% [[6]](https://nusenu.github.io/OrNetStats/#top-10-exit-operators-with-a-proven-domain) 
 of the tor exit capacity has adopted the AROI and it is the only available specified operator identifier
