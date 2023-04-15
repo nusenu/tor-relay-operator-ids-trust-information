@@ -139,7 +139,7 @@ A consumer does not fetch and validate AROIs where max_depth is already exceeded
 
 The max_depth value is placed after the trust anchors domain name/AROI.
 
-Example of a consumer configuration file (ta.conf) using 3 distinct TAs:
+Example of a consumer configuration file (`ta.conf`) using 3 distinct TAs:
 ```
 global_max_depth:0
 example.com:2
@@ -235,9 +235,9 @@ Trust information consumers perform the following steps to find and validate tru
 
 Example walkthrough:
 
-For this example walkthrough, the local configuration on the trust information consumer contains a single trust anchor:
+For this example walkthrough, the local configuration on the trust information consumer (`ta.conf`) contains a single trust anchor:
 ```
-example.com:
+example.com:-1
 ```
 
 A trust information consumer performs these steps:
@@ -260,7 +260,6 @@ When there are multiple pointers (`trusted-aroi.txt` entries) from distinct orig
 as at least one has the recursion flag set, recursive discovery is performed.
 
 ### Caching and Re-validation
-
 
 Local caches at trust information consumers should not exceed 7 days.
 Re-validation should happen after 4 days and MUST not occur more than once a day.
