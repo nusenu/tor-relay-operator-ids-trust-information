@@ -87,7 +87,7 @@ Trust information consumer want to learn about trusted operator IDs and to detec
 ### Trust Anchor (TA)
 
 A trust anchor is the initial starting point which is used to find trusted AROIs.
-TAs publish trusted AROIs. TAs can be relay operators but that is not a requirement.
+TAs publish trusted AROIs as simple text files via HTTPS under a well-known URI. TAs can be relay operators but that is not a requirement.
 TAs are identified by a DNSSEC signed DNS domain.
 
 By publishing an AROI a TA asserts that they trust the operator - identified by their AROI - to run tor relays without malicious intent. 
@@ -97,7 +97,7 @@ Consumers of trust information can use one or more trust anchors to find trusted
 
 Trust anchors publish trusted AROIs via a well-known URL for trust information consumers.
 Trust anchors must be able to serve a text file via HTTPS from the DNSSEC-enabled domain that trust information consumers have configured.
-Additionally TAs must publish integrity information (a hash of the text file) in DNSSEC-signed TXT records.
+Additionally TAs must publish integrity information (a hash of the text file) in DNSSEC-signed TXT records. More details follow in the section "Publishing Trusted AROIs".
 This allows the TA to publish trust information via semi-trusted systems (i.e. CDNs) without giving them the power to modify trust information.
 
 ### Relay Operators
@@ -106,12 +106,19 @@ Relay operators are identified by their AROI
 [[4]](https://nusenu.github.io/ContactInfo-Information-Sharing-Specification/#proof)
 [[5]](https://gitlab.torproject.org/tpo/core/torspec/-/blob/main/proposals/326-tor-relay-well-known-uri-rfc8615.md).
 
-Relay operators can also publish trust information and trust information consumers will use it when
-TAs assign the AROI the necessary recursion flag. Trust information published by relay operators has the same
-meaning (asserts that the published operators are running relays without malicious intent) 
+Relay operators can also publish trust information and trust information consumers can make use of it to find relationships between relay operators. 
+Trust information published by relay operators has the same meaning (asserts that the published operators are running relays without malicious intent) 
 and requirements (HTTPS, hash published via DNSSEC-signed record).
 
 Relay operators that do not publish trust information do not have a DNSSEC requirement on their domain.
+
+Relay operators may also publish a reverse trust reference in a `trusted-by.txt` file under the follwoing well-known URI
+
+https://example.com/.well-known/tor-relay/trust/trusted-by.txt
+
+to allow interested parties to discover and enumerate trusting parties in a reverse manner.
+
+`trusted-by.txt` contains one DNS domain by line and should not contain more than 50 lines. `trusted-by.txt` entries can be verified by fetching the `trusted-aroi.txt` file from the well-known URI and the domains given in the `trusted-by.txt` file.
 
 ### Trust Information Consumers
 
