@@ -39,7 +39,7 @@ The authenticated relay operator ID (AROI) is the proven operator domain [[4]](h
 [[5]](https://gitlab.torproject.org/tpo/core/torspec/-/blob/main/proposals/326-tor-relay-well-known-uri-rfc8615.md). 
 As of April 2023 over 65% [[6]](https://nusenu.github.io/OrNetStats/#top-10-exit-operators-with-a-proven-domain) 
 of the tor exit capacity has adopted the AROI and it is the only available specified operator identifier
-that can not be arbitrarily spoofed and can automatically be verified.
+that can not be arbitrarily spoofed and can be verified automatically.
 
 Trust is assigned to relay operator IDs (AROIs) and not individual relay fingerprints for scalability reasons and
 so new or changed relays for a known operator get the same level of trust
