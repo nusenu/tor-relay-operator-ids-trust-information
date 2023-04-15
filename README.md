@@ -88,10 +88,10 @@ Trust information consumer want to learn about trusted operator IDs and to detec
 
 A trust anchor is the initial starting point which is used to find trusted AROIs.
 TAs publish trusted AROIs. TAs can be relay operators but that is not a requirement.
+TAs are identified by a DNSSEC signed DNS domain.
 
 By publishing an AROI a TA asserts that they trust the operator - identified by their AROI - to run tor relays without malicious intent. 
 
-TAs publish non-malicious AROIs only. TAs do not publish any negative or "do not use" AROI deny lists.
 Trust is binary. There is no notion of "some" trust.
 Consumers of trust information can use one or more trust anchors to find trusted relay operators (identified by their AROI).
 
