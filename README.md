@@ -1,4 +1,4 @@
-# A Simple Web of Trust for Tor Relay Operator IDs
+# A Simple Web of Trust for Authenticated Relay Operator IDs (AROIs)
 
 This is a work-in-progress draft, significant portions might change in a non-compatible way.
 
