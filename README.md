@@ -8,7 +8,8 @@ Tor users are facing persistent malicious actors
 repeatedly running large fractions of the tor network's capacity to exploit them 
 [[1]](https://nusenu.medium.com/the-growing-problem-of-malicious-relays-on-the-tor-network-2f14198af548)
 [[2]](https://nusenu.medium.com/how-malicious-tor-relays-are-exploiting-users-in-2020-part-i-1097575c0cac)
-[[3]](https://nusenu.medium.com/tracking-one-year-of-malicious-tor-exit-relay-activities-part-ii-85c80875c5df).
+[[3]](https://nusenu.medium.com/tracking-one-year-of-malicious-tor-exit-relay-activities-part-ii-85c80875c5df)
+[[4]](https://nusenu.medium.com/is-kax17-performing-de-anonymization-attacks-against-tor-users-42e566defce8).
 Detecting all malicious tor network capacity is not practically feasible using active scanners
 in many cases since attackers have moved from attacking all connections to more targeted approaches where only
 users of specific domains (that are not necessarily known to defenders) are exploited and some malicious relay operators
@@ -16,22 +17,23 @@ also run non-exit relays.
 Therefore we propose to publish relay operator trust information to subsequently have the possibility to limit the fraction
 and impact of unknown tor network capacity by consuming trust information.
 
-Trust in the context of this document is a proxy for a link between community members.
+Trust in the context of this document is a proxy for a link between community members. Trust information is unidirectional.
 For example a local hackerspace might trust its community members to run tor relays without malicious intent.
 
 additional context:
+* https://gitlab.torproject.org/tpo/community/relays/-/issues/55
 * [https://gitlab.torproject.org/tpo/network-health/metrics/relay-search/-/issues/40001](https://gitlab.torproject.org/tpo/network-health/metrics/relay-search/-/issues/40001)
 * [https://lists.torproject.org/pipermail/tor-relays/2020-July/018656.html](https://lists.torproject.org/pipermail/tor-relays/2020-July/018656.html)
 
 ## Scope of this Document
 
-This document describes how trust information is published, can be retrieved and validated.
+This document describes how trust information is published, can be discovered, retrieved and validated.
 It does not introduce any new requirements for tor relay operators. 
 
 ## Goal
 
 The high level goal is to limit the impact of malicious tor relays on users
-and to increase the trustworthiness of the tor network for tor users while also increasing the cost for malicious actors. To achieve that goal we need
+and to increase the trustworthiness of the tor network for tor users while also increasing the cost for malicious actors, especially the cost for recovery of malicious relay capacity after getting detected. To achieve that goal we need
 information about whether a operator is known/trusted or completely unknown (no links to known entities).
 
 On a more technical level the goal is to establish a simple protocol to publish and consume trust information about authenticated relay operator IDs (AROI)
@@ -214,7 +216,7 @@ https://example.com/.well-known/tor-relay/trust/trusted-by.txt
 
 `trusted-by.txt` contains one DNS domain by line and should not contain more than 100 entries.
 `trusted-by.txt` entries can be verified by fetching the `trusted-aroi.txt` file from the well-known URI and the domains given in the `trusted-by.txt` file.
-Before attempting to fetch `trusted-aroi.txt` from these domains via HTTPS validating parties should check the DNSSEC status of the domain and the presence of the `trusted-aroi-hash._tor.example.com.` DNS TXT record limit unnecessary HTTPS requests.
+Before attempting to fetch `trusted-aroi.txt` from the domains listed in `trusted-by.txt` via HTTPS validating parties should check the DNSSEC status of the domain and the presence of the `trusted-aroi-hash._tor.example.com.` DNS TXT record to limit unnecessary HTTPS requests.
 
 The `trusted-by.txt` file is not protected using a hash found in a DNSSEC signed TXT record, like `trusted-aroi.txt`.
 
