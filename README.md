@@ -220,6 +220,8 @@ Before attempting to fetch `trusted-aroi.txt` from the domains listed in `truste
 
 The `trusted-by.txt` file is not protected using a hash found in a DNSSEC signed TXT record, like `trusted-aroi.txt`.
 
+The `trusted-by.txt` content does not imply any trust from the AROI publishing it to the domain contained in the file.
+
 ## Validating Trust Information
 
 Trust information consumers perform the following steps to find and validate trust information.
