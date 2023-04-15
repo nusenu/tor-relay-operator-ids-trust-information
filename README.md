@@ -45,9 +45,7 @@ Trust is assigned to relay operator IDs (AROIs) and not individual relay fingerp
 so new or changed relays for a known operator get the same level of trust
 without requiring any update to published trust information.
 
-The trust scheme supports any relay type (guards, middle and exit relays)
-but it is expected that it will be more useful for relay types that impose a higher risk
-for tor users: guard and exit relays.
+The trust scheme supports any relay type (guards, middle and exit relays) but is not for bridges.
 
 ## Design goals
 
