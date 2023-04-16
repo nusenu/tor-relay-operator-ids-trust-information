@@ -2,6 +2,9 @@
 
 This is a work-in-progress draft, significant portions might change in a non-compatible way.
 
+![trust](https://user-images.githubusercontent.com/11165848/232299726-c7f1e165-b926-4286-8dc9-f6f484b0a23a.png)
+
+
 ## Motivation
 
 Tor users are facing persistent malicious actors
