@@ -24,10 +24,8 @@ Trust in the context of this document is a proxy for a link between community me
 For example a local hackerspace might trust its community members to run tor relays without malicious intent.
 
 additional context:
+* [Proposal for Relay Operator Trust Relationship Information](https://gitlab.torproject.org/tpo/community/relays/-/issues/68)
 * rC3-2021: [Towards a more Trustworthy Tor Network](https://media.ccc.de/v/rc3-2021-chaosstudiohamburg-475-towards-a-more-trustworthy-tor-network) (with en subtitles and German translation)
-* [https://gitlab.torproject.org/tpo/network-health/metrics/relay-search/-/issues/40001](https://gitlab.torproject.org/tpo/network-health/metrics/relay-search/-/issues/40001)
-* [https://lists.torproject.org/pipermail/tor-relays/2020-July/018656.html](https://lists.torproject.org/pipermail/tor-relays/2020-July/018656.html)
-* https://gitlab.torproject.org/tpo/community/relays/-/issues/55
 
 ## Scope of this Document
 
