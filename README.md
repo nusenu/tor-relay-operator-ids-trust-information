@@ -54,8 +54,7 @@ The trust scheme supports any relay type (guards, middle and exit relays) but is
 
 ## Design goals
 
-- simplicity: No additional PKI certificates, PGP keys or manual signing steps are required. 
-Simple text files and DNS records are used.
+- simplicity: trust information is published by setting a torrc option and it gets published via a relay's signed descriptor
 - low entry barrier for publishing trusted AROIs
 - scalability: The design should support at least 10 000 AROIs
 - trust relationships are public by design
@@ -75,35 +74,26 @@ when compared to the previous attempt.
 * Adversaries can add tor relays at significant scale and proof 
 [[4]](https://nusenu.github.io/ContactInfo-Information-Sharing-Specification/#proof)
 their relationship to a domain under their control.
-* They can NOT get a valid TLS certificate for another relay operator's domain.
-* They can NOT manipulate proof files 
+* They can NOT modify another relay operator's torrc options.
+* They can NOT manipulate another relay operator's proof file
 [[5]](https://gitlab.torproject.org/tpo/core/torspec/-/blob/main/proposals/326-tor-relay-well-known-uri-rfc8615.md#well-knowntor-relayrsa-fingerprinttxt)
 by other operators.
 * They can NOT create valid DNSSEC-signed DNS records at a domain not under their control.
-* They CAN manipulate text files on a trust anchor's webserver.
 
 ### Trust Information Consumer Goals
 
 Trust information consumer - tor directory authorities could be an example consumer - want to learn about trusted AROIs, discover trust paths between AROIs 
-and detect manipulated trust information (`trusted-aroi.txt` content).
+and detect manipulated trust information.
 
 ## Roles
 
-### Trust Anchor (TA)
+### Tor Directory Authorities (DA)
 
-A trust anchor is the initial starting point which is used to find trusted AROIs.
-TAs publish trusted AROIs as simple text files via HTTPS under a well-known URI. TAs can be relay operators but that is not a requirement.
-TAs are identified by a DNSSEC signed DNS domain.
-
-By publishing an AROI a TA asserts that they trust the operator - identified by their AROI - to run tor relays without malicious intent. 
+DAs publish trusted AROIs in the tor consensus.
+By publishing an AROI a DA asserts that they trust the operator - identified by their AROI - to run tor relays without malicious intent. 
 
 Trust is binary. There is no notion of "some" trust.
-Consumers of trust information can use one or more trust anchors to find trusted relay operators (identified by their AROI).
-
-Trust anchors publish trusted AROIs via a well-known URL for trust information consumers.
-Trust anchors must be able to serve a text file via HTTPS from the DNSSEC-enabled domain that trust information consumers have configured.
-Additionally TAs must publish integrity information (a hash of the text file) in DNSSEC-signed TXT records. More details follow in the section "Publishing Trusted AROIs".
-This allows the TA to publish trust information via semi-trusted systems (i.e. CDNs) without giving them the power to modify trust information.
+Consumers of trust information can use the consensus to find trust paths between relay operators (identified by their AROI).
 
 ### Relay Operators
 
@@ -112,152 +102,40 @@ Relay operators are identified by their AROI
 [[5]](https://gitlab.torproject.org/tpo/core/torspec/-/blob/main/proposals/326-tor-relay-well-known-uri-rfc8615.md).
 
 Relay operators can also publish trust information and trust information consumers can make use of it to find relationships between relay operators. 
-Trust information published by relay operators has the same meaning (asserts that the published operators are running relays without malicious intent) 
-and requirements (HTTPS, hash published via DNSSEC-signed TXT record).
-
-Relay operators that do not publish trust information do not have a DNSSEC requirement on their AROI domain.
-
-Relay operators may also publish a reverse trust reference in a `trusted-by.txt` file to allow interested
-parties to discover trusting entities. For details see the section "Publishing Trusting Parties".
-
-### Trust Information Consumers
-
-Consumers of trust information can choose what trust anchor they trust to find trusted AROIs.
-In addition to specify the trust anchor, consumers can 
-configure a global and per-TA max_depth value. The per-TA value overrides the global value. 
-The max_depth describes the longest path, measured in edge counts that a consumer is willing to accept.
-A consumer does not fetch and validate AROIs where max_depth is already exceeded.
-
-| max_depth value | meaning | 
-| ---            | ---     |
-| -  | use the global max_depth configuration |
-| -1 | accept arbitrarily long trust paths (no restrictions). |
-| 0 | The TA is a trusted operator ID, no dynamic discovery of additional trusted operator IDs. No DNSSEC check is performed. |
-| 1 | Discover and trust AROIs from the locally configured TA(s) but do not attempt to discover and trust any further. | 
-| 2 | Discover and accept trust information with a max edge count of up to 2. In the following trust path: A(TA) -> B -> C -> D the last accepted AROI would be "C". "D" is ignored.  | 
-| N | Trust up to N edges in the trust path. Ignore AROIs where the edge count exceeds this value. |
-
-#### Trust Consumer Configuration
-
-The max_depth value is placed after the trust anchors domain name/AROI.
-
-Example of a consumer configuration file (`ta.conf`) using 3 distinct TAs:
-```
-global_max_depth:0
-example.com:2
-example.net:1
-example.org:-
-```
-
-In addition to max_depth a consumer might also be interested to require multiple independend trust paths to a single AROI. 
-We leave this to a future iterations of the protocol to keep it simple for now. It will not require any change on how trust information 
-is published, should this be added in the future.
-
-#### Negative Trust Configuration
-
-A consumer can also specify a list of domains that a consumer never wants to trust for anything (no transitive trust and no relay operator trust)
-to ensure that dynamic discovery will never result in any trust in the listed entities and others that are **only** discoverable via these domains.
-If a certain AROI is published by a negative trust entry and by a trusted TA, the AROI is trusted.
-
-The `negative-trust.conf` configuration contains one entry per line. Lines starting with "#" are comments and ignored during parsing.
-
-```
-malicious-TA.example.com
-malicious-operator.example.com
-```
-
+Trust information published by relay operators has the same meaning (asserts that the published operators are running relays without malicious intent)
+but since relays do not publish a consensus, a relay publishes trust information via its descriptor.
+An operator can publish trust information via a relay's torrc configuration file option.
 
 ## Publishing Trusted AROIs
 
-Trust anchors and optionally also relay operators publish 
-trusted relay operator IDs under this well-known URL:
+Relay operators optionally publish trusted relay operator IDs (AROIs) via a torrc option
+to allow trust information consumers (for example DAs) to discover trust paths (relationships) between
+relay operators.
 
-https://example.com/.well-known/tor-relay/trust/trusted-aroi.txt
+Relay operators can specify trusted AROIs in their torrs file. An AROI is optionally followed by a ":" and the recursion flag "r".
+This recursion flag tells the consumer whether the given AROI is also trusted to publish AROIs itself.
 
-The URL MUST be HTTPS and use a valid certificate from a generally trusted root CA. 
-Plain HTTP MUST not be used. The URL MUST be accessible by robots (no CAPTCHAs or similar).
-The URL MUST NOT redirect to another host.
+Publishers MUST only specify AROIs where they are confident that the operator does operate relays **without** malicious intent.
 
-The file `trusted-aroi.txt` contains one AROI (a domain) per line followed by a ":" and the recursion flag: a value of 0 or 1.
-This recursion flag tells the consumer whether the given AROI is also trusted to publish (1) `trusted-aroi.txt` files itself or not (0).
-The recursion flag should only be enabled when the operator is known to publish `trusted-aroi.txt` and have a DNSSEC-signed domain, to avoid unnecessary polling.
-
-Publishers MUST only publish AROIs where they are confident that the operator does NOT operate relays with malicious intent.
-It is generally expected that a publisher "knows" the operators for which it vouches.
-
-Lines starting with "#" are comments and ignored.
-
-
-Example:
+Example torrc section :
 ```
-# this is a comment line
-example.com:1
-example.net:0
+# example with recursion flag enabled:
+TrustedAROI example.com:r
+# example without recursion flag:
+TrustedAROI example.net
 ```
 
-In addition to serving the file content via HTTPS the content MUST be 
-authenticated using the following DNS TXT record - which MUST be DNSSEC-signed (DNSSEC signature MUST be validated):
-
+resulting relay descriptor line containing the information when uploading the descriptor to directory authorities:
 ```
-trusted-aroi-hash._tor.example.com. TXT sha512=ee2cdf110893ad62b2aff24e668e4f8d2...
+trusted-aroi example.com:r example.net
 ```
-
-`trusted-aroi.txt` files that can not be verified using the hash in the DNS TXT record MUST be ignored.
-
-The DNS TTL value for the TXT record should not exceed 60 seconds to be able to update the `trusted-aroi.txt` 
-file withouth running out of sync for an extended amount of time due to DNS caching.
-
-The only supported hash algorithm is SHA512.
 
 ## Validating Trust Information
 
-Trust information consumers perform the following steps to find and validate trust information.
-
-- retrieve trust anchors from local configuration
-- verify they are valid DNSSEC-signed domains (not in case of max_depth=0)
-- fetch AROIs from the trust anchor via HTTPS (not in case of max_depth=0)
-- validate the content by fetching the hash from the related DNS TXT record (and ensure it has a valid DNSSEC signature)
-- add the newly learned AROI to the local cache of trusted AROIs
-
-Example walkthrough:
-
-For this example walkthrough, the local configuration on the trust information consumer (`ta.conf`) contains a single trust anchor:
-```
-example.com:-1
-```
-
-A trust information consumer performs these steps:
-
-1. query the DNS TXT record `trusted-aroi-hash._tor.example.com` and ensure it is DNSSEC-signed.
-2. abort if the TXT record is not signed, does not exist or is not formated as expected.
-3. fetch https://example.com/.well-known/tor-relay/trust/trusted-aroi.txt and ensure that the TLS certificate is valid.
-4. ensure the SHA512 hash of the `trusted-aroi.txt` file matches the one provided in the DNS TXT record (from step 1)
-the `trusted-aroi.txt` file contains:
-```
-example.org:1
-example.net:0
-```
-1. check whether these IDs are already in the local cache of trusted operators
-1. ensure example.org and example.net exist
-1. add them to the list of trusted AROIs
-1. repeat the first 3 steps for example.org (but not for example.net because it has the recursion flag set to 0)
-
-When there are multiple pointers (`trusted-aroi.txt` entries) from distinct origins to a given AROI, as soon 
-as at least one has the recursion flag set, recursive discovery is performed.
-
-### Caching and Re-validation
-
-Local caches at trust information consumers should not exceed 7 days.
-Re-validation should happen after 4 days and MUST not occur more than once a day.
-
+Trust information can be validated by verifying the relay descriptor's signature.
 
 ## Security Considerations
 
 * Domains can expire and be registered by unrelated entities.
 * Domains can be confiscated.
-* Trust anchors can hand out distinct answers to different consumers to attack consumers. A public append only log could ensure that is detectable (similar to certificate transparency).
 * Trust information and community links can also be exploited for social engeneering and other types of attacks. The design does not require anyone to link themselves to tor relay operators or reveal their identity (pseudonyms can be used).
-* Depending on TA diversity the design might limits the "social diversity" of trusted AROIs to some extend.
-
-
-
