@@ -209,22 +209,6 @@ file withouth running out of sync for an extended amount of time due to DNS cach
 
 The only supported hash algorithm is SHA512.
 
-
-## Publishing Trusting Parties
-
-To allow interested parties to discover and enumerate trusting parties of a given AROI,
-relay operators can optionally publish trusting entities under the follwoing well-known URI:
-
-https://example.com/.well-known/tor-relay/trust/trusted-by.txt
-
-`trusted-by.txt` contains one DNS domain by line and should not contain more than 100 entries.
-`trusted-by.txt` entries can be verified by fetching the `trusted-aroi.txt` file from the well-known URI and the domains given in the `trusted-by.txt` file.
-Before attempting to fetch `trusted-aroi.txt` from the domains listed in `trusted-by.txt` via HTTPS validating parties should check the DNSSEC status of the domain and the presence of the `trusted-aroi-hash._tor.example.com.` DNS TXT record to limit unnecessary HTTPS requests.
-
-The `trusted-by.txt` file is not protected using a hash found in a DNSSEC signed TXT record, like `trusted-aroi.txt`.
-
-The `trusted-by.txt` content does not imply any trust from the AROI publishing it to the domain contained in the file.
-
 ## Validating Trust Information
 
 Trust information consumers perform the following steps to find and validate trust information.
