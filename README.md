@@ -1,8 +1,9 @@
+
 # A Simple Web of Trust for Authenticated Relay Operator IDs (AROIs)
 
 This is a work-in-progress draft, significant portions might change in a non-compatible way.
 
-![trust](https://user-images.githubusercontent.com/11165848/232299726-c7f1e165-b926-4286-8dc9-f6f484b0a23a.png)
+![trust-aroi](https://user-images.githubusercontent.com/11165848/235495697-1424d733-5971-4e4a-b73e-b8f0808d8b7e.png)
 
 
 ## Motivation
